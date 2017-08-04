@@ -1,0 +1,326 @@
+---
+swagger: "2.0"
+info:
+  description: "API to support the transactions associated with gift card processing.\
+    \ Used to initiate a gift card transactions such as Issue new card, Recharge,\
+    \ Check Balance, Heath Check of gift card service etc."
+  version: "1.0.0"
+  title: "Gift Card API"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/ghkeerthik/giftcard/1.0.0"
+schemes:
+- "https"
+- "http"
+paths:
+  /transaction:
+    post:
+      summary: "Gift Card transaction endpoint"
+      description: "API to support the transactions associated with gift card processing.\
+        \ The consumers should use the API to initiate the following gift card transactions.\n\
+        1) ISSUE - Used to place value on a customer gift card. The Issue Gift Card\
+        \ transaction must be the first transaction on a card. The amount requested\
+        \ is the amount of the issue. \n2) INQUIRY - Used to verify the available\
+        \ funds on a card.\n3) REDEEM - Used to debit a gift card when purchasing\
+        \ goods.\n4) RECHARGE - Used to top up a gift card that has already been issued.\n\
+        5) REVERSE - Used to resolve situations arising from timeout or network outage.\
+        \ A reversal is not a cancellation. \n6) RETURN - Used to electronically apply\
+        \ value to a card from returned merchandise. A Merchandise Return transaction\
+        \ can be the first transaction on a new card or it can be applied to a previously\
+        \ used card.\n7) CANCEL - Used to manually void or post void a previous transaction.\
+        \ It is possible to cancel a transaction until it is reconciled or reversed.\
+        \ \n"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "Request"
+        description: "Request to initiate balance inquiry with the card provider"
+        required: false
+        schema:
+          $ref: "#/definitions/transactionRequest"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/transactionResponse"
+        202:
+          description: "Accepted with Business Error"
+          schema:
+            $ref: "#/definitions/transactionResponse"
+        503:
+          description: "System Unavailable"
+          schema:
+            $ref: "#/definitions/transactionResponse"
+  /healthcheck:
+    get:
+      summary: "Health check endpoint"
+      description: "This is a simple ping endpoint"
+      parameters: []
+      responses:
+        200:
+          description: "Returns whether the server is alive or not"
+          schema:
+            $ref: "#/definitions/healthCheck"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/responseStatus"
+definitions:
+  transactionRequest:
+    type: "object"
+    properties:
+      transaction:
+        $ref: "#/definitions/request"
+  transactionResponse:
+    type: "object"
+    properties:
+      transaction:
+        $ref: "#/definitions/response"
+  request:
+    type: "object"
+    properties:
+      requestType:
+        type: "string"
+        description: "The transaction type for initiated request"
+        enum:
+        - "ISSUE"
+        - "INQUIRY"
+        - "REDEEM"
+        - "RECHARGE"
+        - "REVERSE"
+        - "RETURN"
+        - "CANCEL"
+      transactionId:
+        type: "string"
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        description: "Unique identifier associated with a transaction that is expected\
+          \ to be provided by consumer systems"
+      transactionDateTime:
+        type: "string"
+        format: "date-time"
+        example: "2016-08-29T09:12:33.001Z"
+        description: "Transaction date time in format YYYY-MM-DDTHH:MM:SS.sssXXX"
+      channel:
+        type: "string"
+        description: "Used to indicate the channel from where the trasaction was initiated"
+        enum:
+        - "ECOM"
+        - "CUSTOMER-SERVICE"
+        - "AFFILIATE"
+        - "RETAIL"
+        - "API"
+      externalId:
+        $ref: "#/definitions/externalId"
+      cards:
+        type: "array"
+        items:
+          $ref: "#/definitions/cardRequest"
+      location:
+        $ref: "#/definitions/location"
+      metadata:
+        $ref: "#/definitions/metadata"
+  response:
+    type: "object"
+    properties:
+      requestType:
+        type: "string"
+        description: "The transaction type for initiated request"
+        enum:
+        - "ISSUE"
+        - "INQUIRY"
+        - "REDEEM"
+        - "RECHARGE"
+        - "REVERSE"
+        - "RETURN"
+        - "CANCEL"
+      transactionId:
+        type: "string"
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        description: "Unique identifier associated with a transaction that is expected\
+          \ to be provided by consumer systems"
+      transactionDateTime:
+        type: "string"
+        format: "date-time"
+        example: "2016-08-29T09:12:33.001Z"
+        description: "Transaction date time in format YYYY-MM-DDTHH:MM:SS.sssXXX"
+      channel:
+        type: "string"
+        description: "Used to indicate the channel from where the trasaction was initiated"
+        enum:
+        - "ECOM"
+        - "CUSTOMER-SERVICE"
+        - "AFFILIATE"
+        - "RETAIL"
+        - "API"
+      externalId:
+        $ref: "#/definitions/externalId"
+      cards:
+        type: "array"
+        items:
+          $ref: "#/definitions/cardResponse"
+      location:
+        $ref: "#/definitions/location"
+      metadata:
+        $ref: "#/definitions/metadata"
+      response:
+        $ref: "#/definitions/responseStatus"
+  cardRequest:
+    type: "object"
+    properties:
+      Id:
+        type: "integer"
+        format: "int32"
+        example: 1
+        description: "Unique line identifier associated with the card to support processing\
+          \ of multiple cards in a single transaction"
+      cardNumber:
+        type: "string"
+        example: "6338701012345677"
+        description: "Gift Card Number"
+      securityCode:
+        type: "string"
+        example: "0876"
+        description: "Could include, the Secondary Security Code(SSC) or PIN available\
+          \ under the gift card scratch off panel"
+      securityCodeType:
+        type: "string"
+        description: "Indicates the type of security code captured"
+        enum:
+        - "PIN"
+        - "SSC"
+      acquirerId:
+        type: "string"
+        example: "SVS"
+        description: "Used to capture information about the gift card acquirer"
+      requestedAmount:
+        $ref: "#/definitions/amount"
+  cardResponse:
+    type: "object"
+    properties:
+      Id:
+        type: "integer"
+        format: "int32"
+        example: 1
+        description: "Unique line identifier associated with the card to support processing\
+          \ of multiple cards in a single transaction"
+      cardNumber:
+        type: "string"
+        example: "6338701012345677"
+        description: "Gift Card Number"
+      endOfValidityDate:
+        type: "string"
+        format: "date-time"
+        example: "2016-08-29T00:00:00.000Z"
+        description: "The card end of validity date in format YYYY-MM-DDTHH:MM:SS.sssXXX"
+      acquirerId:
+        type: "string"
+        example: "SVS"
+        description: "Used to capture information about the gift card acquirer"
+      balanceAmount:
+        $ref: "#/definitions/amount"
+      approvedAmount:
+        $ref: "#/definitions/amount"
+      conversionRate:
+        type: "string"
+        example: "1.0000"
+        description: "Conversion rate for the transaction"
+  location:
+    type: "object"
+    properties:
+      countryCode:
+        type: "string"
+        example: "GBP"
+        description: "Country Codes in ISO format"
+      ipAddress:
+        type: "string"
+        example: "10.0.0.0.156"
+        description: "ipAddress of the device used to initiate the transaction"
+      device:
+        type: "string"
+        example: "Enactor.Store1.Pos55"
+        description: "Device ID used to initiate the transaction"
+      storeId:
+        type: "string"
+        example: "245"
+        description: "Store number from where the transaction was initiated"
+      posId:
+        type: "string"
+        example: "2345"
+        description: "The POS ID from where the transaction was initiated"
+      locationType:
+        type: "string"
+        example: "STORE"
+        description: "Channel from where the transaction was initiated"
+        enum:
+        - "STORE"
+        - "ONLINE"
+        - "CONTACT-CENTRE"
+  metadata:
+    type: "object"
+    properties:
+      retryCount:
+        type: "number"
+        format: "int32"
+        example: 0
+        description: ""
+      environment:
+        type: "string"
+        description: "Indicates the environment where the API is being invoked from"
+        enum:
+        - "DEV"
+        - "UAT1"
+        - "UAT2"
+        - "UAT3"
+        - "PPE"
+        - "PROD"
+  externalId:
+    type: "object"
+    properties:
+      systemType:
+        type: "string"
+        description: "System type from where the transaction was initiated"
+        enum:
+        - "ENACTOR"
+        - "TCPL"
+      userId:
+        type: "string"
+        example: "Sales-Advisor-1"
+        description: "User ID who initiated the transaction if available"
+      customerId:
+        type: "string"
+        example: "Mr.Right-1234"
+        description: "Customer ID if available"
+  amount:
+    type: "object"
+    properties:
+      amount:
+        type: "string"
+        example: "55.50"
+        description: "Amount assocaited with the gift card transaction"
+      currencyCode:
+        type: "string"
+        example: "GBP"
+        description: "Currency code associated with the gift card transaction in [ISO\
+          \ 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code"
+  responseStatus:
+    type: "object"
+    properties:
+      code:
+        type: "string"
+        example: "101"
+        description: "Success or error code assocaited with the response"
+      message:
+        type: "string"
+        example: "Gift Card Service Unavailable"
+        description: "Sucess or error message associated with the response"
+  healthCheck:
+    type: "object"
+    properties:
+      alive:
+        type: "boolean"
+        description: "Whether the server is alive or not"
