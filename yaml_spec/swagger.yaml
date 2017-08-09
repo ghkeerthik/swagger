@@ -14,8 +14,6 @@ basePath: "/ghkeerthik/giftcard/1.0.0"
 schemes:
 - "https"
 - "http"
-security:
-- basicAuth: []
 paths:
   /transaction:
     post:
@@ -72,9 +70,6 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/responseStatus"
-securityDefinitions:
-  basicAuth:
-    type: "basic"
 definitions:
   transactionRequest:
     type: "object"
