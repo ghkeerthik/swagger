@@ -1,0 +1,791 @@
+openapi: 3.0.0
+info:
+  title: Product Backbone
+  description: |
+    Product backbone V2 API specification.
+  version: 1.0.0-oas3
+tags:
+  - name: style
+    description: >-
+      Top level entity of a product that groups one or more products belonging
+      to the style.
+  - name: option
+    description: Color variant of a Style
+  - name: variant
+    description: 'Otherwise known as SKU, size variant of an option'
+paths:
+  '/style/{styleUUID}':
+    get:
+      tags:
+        - style
+      summary: Find style by UUID
+      description: Returns a single style
+      parameters:
+        - in: path
+          name: styleUUID
+          required: true
+          description: ID of style to return
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/style'
+        '400':
+          description: Invalid Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Unauthorised
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: System Unvailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      tags:
+        - style
+      summary: Add a whole new style to the backbone
+      parameters:
+        - name: styleUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: System Unvailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/styleRequestBody'
+        description: Request to initiate payment transaction
+    delete:
+      tags:
+        - style
+      summary: Deletes a style
+      operationId: deleteStyle
+      parameters:
+        - name: styleUUID
+          in: path
+          description: UUID of style to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Invalid Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Unauthorised
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: System Unvailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+  '/option/{optionUUID}':
+    get:
+      tags:
+        - option
+      summary: Find style by UUID
+      description: Returns a single style
+      parameters:
+        - in: path
+          name: optionUUID
+          required: true
+          description: ID of style to return
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/option'
+        '400':
+          description: Invalid Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Unauthorised
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: System Unvailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      tags:
+        - option
+      summary: Add a whole new style to the backbone
+      parameters:
+        - name: optionUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: System Unvailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/optionRequestBody'
+        description: Request to initiate payment transaction
+    delete:
+      tags:
+        - option
+      summary: Deletes a option
+      operationId: deleteOption
+      parameters:
+        - name: optionUUID
+          in: path
+          description: UUID of option to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Invalid Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Unauthorised
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: System Unvailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+  '/variant/{variantUUID}':
+    get:
+      tags:
+        - variant
+      summary: Find style by UUID
+      description: Returns a single style
+      parameters:
+        - in: path
+          name: variantUUID
+          required: true
+          description: ID of style to return
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/variant'
+        '400':
+          description: Invalid Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Unauthorised
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: System Unvailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      tags:
+        - variant
+      summary: Add a whole new style to the backbone
+      parameters:
+        - name: variantUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: System Unvailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/variantRequestBody'
+        description: Request to initiate payment transaction
+    delete:
+      tags:
+        - variant
+      summary: Deletes a variant
+      operationId: deleteVariant
+      parameters:
+        - name: variantUUID
+          in: path
+          description: UUID of style to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Invalid Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Unauthorised
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: System Unvailable
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/error'
+servers:
+  - url: 'https://virtserver.swaggerhub.com/ghkeerthik/ProductAPI_V2/1.0.0'
+components:
+  schemas:
+    metadata:
+      type: object
+      description: defines the request metadata struct.
+      properties:
+        apiVersion:
+          type: string
+          description: Used to represent api version if applicable.
+          example: /product/2.0.0
+        environment:
+          type: string
+          enum:
+            - DEV
+            - UAT1
+            - UAT2
+            - UAT3
+            - PPE
+            - PROD
+          description: Indicates the environment where the API is being invoked from.
+        createdBy:
+          type: string
+          example: ri_bandmuser@ri.com
+        dateTimeCreated:
+          type: string
+          format: date-time
+        dateTimeLastModified:
+          type: string
+          format: date-time
+        dateTimeDeleted:
+          type: string
+          format: date-time
+        eventSource:
+          type: string
+          example: Injector
+    supplier:
+      description: >-
+        Captures supplier specific information associated with an option - type:
+        object
+      properties:
+        developmentId:
+          type: string
+          example: WK162672
+        status:
+          type: string
+          enum:
+            - Development
+            - Proposed
+            - ReadyToBuy
+            - Cancelled_Development
+            - Cancelled_ReadyToBuy
+            - Cancelled_proposed
+            - Pending
+            - Active
+            - Hold
+            - MarkDown1
+            - MarkDown2
+            - Clearance
+            - ReadyForDeletion
+            - InActive
+            - Recall
+          example: Development
+        countryOfManufacture:
+          type: string
+          example: IN
+        supplierReferences:
+          type: array
+          items:
+            $ref: '#/components/schemas/supplierReference'
+        location:
+          $ref: '#/components/schemas/location'
+        attributes:
+          description: supplier specific attributes for the option
+          type: array
+          items:
+            $ref: '#/components/schemas/attribute'
+        metadata:
+          $ref: '#/components/schemas/metadata'
+    style:
+      description: >-
+        A style is what consumers consider as a product, being composed of
+        variants (SKUs) that typically vary by size and colour.
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        internalName:
+          type: string
+          example: Spot print midi dress
+        externalName:
+          type: string
+          example: Elegant Spot print midi dress
+        description:
+          type: string
+          example: spot print midi dress
+        group:
+          type: string
+          example: midi - dress
+        options:
+          description: >-
+            The list of options for this style. This is typically the different
+            colours or fabric of the style. If there is only one colour, then
+            there should just be one option.
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/option'
+        heirarchy:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 112-105
+              name:
+                type: string
+                example: Range
+              description:
+                type: string
+                example: Plain Smart Shirt - LS
+              id:
+                type: string
+                example: '1510324'
+              parentId:
+                type: string
+                example: 2308543-1071
+        attributes:
+          description: supplier specific attributes for the option
+          type: array
+          items:
+            $ref: '#/components/schemas/attribute'
+    option:
+      description: A option is colour variation of a Style
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        internalName:
+          type: string
+          example: Spot print midi dress
+        externalName:
+          type: string
+          example: Elegant Spot print midi dress
+        shortDescription:
+          type: string
+          example: Forever black spot print midi dress
+        longDescription:
+          type: string
+          example: Forever black spot print cotton midi dress for women
+        colour:
+          type: string
+          example: Red
+        colourGroup:
+          type: string
+          example: classic darks
+        status:
+          type: string
+          enum:
+            - Development
+            - Proposed
+            - ReadyToBuy
+            - Cancelled
+            - Active
+            - Hold
+            - MarkDown1
+            - MarkDown2
+            - Clearance
+            - ReadyForDeletion
+            - InActive
+            - Recall
+          example: Development
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/image'
+        suppliers:
+          type: array
+          items:
+            $ref: '#/components/schemas/supplier'
+        variants:
+          type: array
+          items:
+            $ref: '#/components/schemas/variant'
+        merchandisingLinks:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: cross department
+              reference:
+                type: string
+                example: 46ab2949-67c2-0f8a-63be-3726e5766090
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/attribute'
+        translations:
+          type: array
+          items:
+            $ref: '#/components/schemas/translation'
+    variant:
+      description: 'A variant is size variation of an option, represents SKU'
+      type: object
+      properties:
+        supplierReferenceId:
+          type: string
+          example: '753653'
+        developmentId:
+          type: string
+          example: WK162672
+        gtin:
+          type: string
+          example: '5057111203375'
+        sku:
+          type: string
+          example: '5830859'
+        status:
+          type: string
+          example: Inactive
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/price'
+        tax:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: integer
+                description: The value for this currency.
+                format: int32
+              countryCode:
+                type: string
+        dimensions:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - length
+                  - width
+                  - height
+                  - weight
+                  - volume
+                example: width
+              value:
+                type: string
+                example: '30'
+                description: 'Indicates the type of image ie., main, back, front, 360 etc'
+              unit:
+                type: string
+                example: cm
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/attribute'
+    price:
+      type: object
+      properties:
+        location:
+          type: string
+          example: '400'
+        type:
+          type: string
+          enum:
+            - Full
+            - MarkDown
+            - Promo
+            - RRP
+        values:
+          type: array
+          items:
+            type: object
+            properties:
+              amount:
+                type: integer
+                description: The value for this currency.
+                format: int32
+              currency:
+                type: string
+                pattern: '^[A-Z]{3}$'
+                description: |-
+                  ISO 4217 currency code. See
+                   [here](https://en.wikipedia.org/wiki/ISO_4217) for more details.
+                example: GBP
+              startDate:
+                type: string
+                format: date-time
+                example: '2020-07-21T17:32:28Z'
+              endDate:
+                type: string
+                format: date-time
+                example: '2020-07-30T17:32:28Z'
+    image:
+      type: object
+      properties:
+        url:
+          type: string
+          example: 'https://images.riverisland.com/is/image/RiverIsland/737720_main'
+        type:
+          type: string
+          example: main
+          description: 'Indicates the type of image ie., main, back, front, 360 etc'
+    supplierPrice:
+      type: object
+      properties:
+        proposedRetailPrice:
+          type: integer
+          description: |-
+            The value for this currency.
+             All prices are integers as they should be stored in the lowest denomination of the given currency. For GBP that means pence. Figures should only be converted to doubles after all arithmatic has been done and the figure is ready for display. This avoids rounding errors commonly associated with arithmatic using doubles.
+          format: int32
+        supplierCostPrice:
+          type: integer
+          description: |-
+            The value for this currency.
+             All prices are integers as they should be stored in the lowest denomination of the given currency. For GBP that means pence. Figures should only be converted to doubles after all arithmatic has been done and the figure is ready for display. This avoids rounding errors commonly associated with arithmatic using doubles.
+          format: int32
+        currency:
+          type: string
+          pattern: '^[A-Z]{3}$'
+          description: >-
+            ISO 4217 currency code. See
+            [here](https://en.wikipedia.org/wiki/ISO_4217) for more details.
+    attribute:
+      type: object
+      description: Object that is used to capture external system identifiers
+      properties:
+        sourceSystem:
+          type: string
+          description: >-
+            Determines system that generates the external identifier, eg. ODBMS,
+            TCPL
+          example: INJECTOR
+        type:
+          type: string
+          description: >-
+            External system identifier, used for identification of order,
+            product etc.
+          example: fabricType
+        name:
+          type: string
+          description: 'Identifies the type of external Id, eg. ORDER, SKU, PRODUCT'
+          example: Fabric Type
+        value:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+                uniqueItems: true
+            - type: number
+            - type: boolean
+            - nullable: true
+          type: string
+          description: 'Identifies the type of external Id, eg. ORDER, SKU, PRODUCT'
+          example:
+            - Cotton
+            - Polyester
+    location:
+      type: object
+      description: Object used to represent supplier identifier
+      properties:
+        code:
+          type: string
+          description: Unique identifier for the supplier
+          example: '772672'
+        name:
+          type: string
+          description: supplier name
+          example: LF FASHION (OREN IS MAK TEKS GIDA TUR)
+        countryOfOrigin:
+          type: string
+          example: India
+    supplierReference:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '2882772'
+          description: >-
+            This field is going to associate the supplier reference id
+            associated with a development product
+        price:
+          $ref: '#/components/schemas/supplierPrice'
+    styleRequestBody:
+      type: object
+      properties:
+        requestID:
+          type: string
+          format: uuid
+        style:
+          $ref: '#/components/schemas/style'
+    optionRequestBody:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        style:
+          $ref: '#/components/schemas/option'
+    variantRequestBody:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        style:
+          $ref: '#/components/schemas/variant'
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: >-
+            Error processing Request for
+            uuid:3fa85f64-5717-4562-b3fc-2c963f66afa6
+    translation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        languageCode:
+          type: string
+          example: fr
+        key:
+          type: string
+          example: name
+        value:
+          type: string
+          example: Robe midi à pois
